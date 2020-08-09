@@ -101,7 +101,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        self.filepath = "sample_img/imag5.jpg"
+        self.filepath = ""
         self.fontsize = 15
         self.text = ""
         self.image = None
@@ -110,6 +110,11 @@ class Ui_MainWindow(object):
         self.btn_proceed.clicked.connect(self.generateText)
         self.btn_generatetext.clicked.connect(self.assignText)
         self.btn_boundingboxes.clicked.connect(self.generatBoundingBox)
+        self.btn_translate.clicked.connect(self.translateText)
+
+        self.btn_boundingboxes.setDisabled(True)
+        self.btn_generatetext.setDisabled(True)
+        self.btn_translate.setDisabled(True)
 
     
 
@@ -117,54 +122,84 @@ class Ui_MainWindow(object):
         options = QFileDialog.Options()
         fname, ok = QFileDialog.getOpenFileName(None,"QFileDialog.getOpenFileName()", "","Image Files (*.jpg *.png *.jpeg *.PNG)", options=options)
         if ok:
-            print(fname)
             self.filepath = fname
             self.show_image()
+            self.btn_boundingboxes.setDisabled(False)
+            self.btn_generatetext.setDisabled(False)
+            self.btn_translate.setDisabled(False)
+        else:
+            self.disperrmessage("FileName Error", "Please choos an image again.")
     
     def fontchanged(self):
         self.fontsize = int(self.spinBox_fontsize.value())
 
     def generateText(self):
-        self.text = ""
-        img = cv2.imread(self.filepath)
-        grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        imgh, imgw = grey.shape
-        self.resultimage = np.zeros((imgh, imgw, 3), np.uint8)
-        text = pytesseract.image_to_data(img, lang="amh")
-        imgpil = Image.fromarray(self.resultimage)
-        draw = ImageDraw.Draw(imgpil)
-        font = ImageFont.truetype(".\AbyssinicaSIL-Regular.ttf", self.fontsize)
+        if len(self.filepath) > 0:
+            self.text = ""
+            img = cv2.imread(self.filepath)
+            grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            imgh, imgw = grey.shape
+            self.resultimage = np.zeros((imgh, imgw, 3), np.uint8)
+            text = pytesseract.image_to_data(img, lang="amh")
+            imgpil = Image.fromarray(self.resultimage)
+            draw = ImageDraw.Draw(imgpil)
+            font = ImageFont.truetype(".\AbyssinicaSIL-Regular.ttf", self.fontsize)
 
-        for x, i in enumerate(text.splitlines()):
-            if x != 0 and len(i.split()) == 12:
-                i = i.split()
-                self.text += i[11] + " "
-                x,y,w,h = int(i[6]),int(i[7]),int(i[8]),int(i[9])
-                draw.text((x,y), i[11], fill=(255,255,255,0), font=font)
+            for x, i in enumerate(text.splitlines()):
+                if x != 0 and len(i.split()) == 12:
+                    i = i.split()
+                    self.text += i[11] + " "
+                    x,y,w,h = int(i[6]),int(i[7]),int(i[8]),int(i[9])
+                    draw.text((x,y), i[11], fill=(255,255,255,0), font=font)
 
 
-        self.resultimage = np.array(imgpil)
-        self.show_resultimage()
+            self.resultimage = np.array(imgpil)
+            self.show_resultimage()
+        else:
+            self.disperrmessage("Idle image Error" , "Please choose an image first")
+
+    def translateText(self):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText("This feature not available for this version")
+        msg.setWindowTitle("Feature")
+        #msg.setDetailedText("The details are as follows:")
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()
+
+    def disperrmessage(self, tittle, message):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Warning)
+        msg.setText(message)
+        msg.setWindowTitle(tittle)
+        #msg.setDetailedText("The details are as follows:")
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()
 
     def generatBoundingBox(self):
-        img = cv2.imread(self.filepath)
-        text = pytesseract.image_to_data(img, lang="amh")
-        for x, i in enumerate(text.splitlines()):
+        if len(self.filepath) > 0:
+            img = cv2.imread(self.filepath)
+            text = pytesseract.image_to_data(img, lang="amh")
+            for x, i in enumerate(text.splitlines()):
+                
+                if x != 0 and len(i.split()) == 12:
+                    i = i.split()
+                    x,y,w,h = int(i[6]),int(i[7]),int(i[8]),int(i[9])
+                    cv2.rectangle(img, (x,y), (x+w, y+h), (0,0,255),1)
             
-            if x != 0 and len(i.split()) == 12:
-                i = i.split()
-                x,y,w,h = int(i[6]),int(i[7]),int(i[8]),int(i[9])
-                cv2.rectangle(img, (x,y), (x+w, y+h), (0,0,255),1)
-        
-        cv2.imshow("Bounding boxes", img)
-
+            cv2.imshow("Bounding boxes", img)
+        else:
+            self.disperrmessage("Idle image Error" , "Please choose an image first")
 
     def assignText(self):
-        fontdb = QFontDatabase()
-        fontdb.addApplicationFont(".\\AbyssinicaSIL-Regular.ttf")
-        font  = QFont("Abyssinica SIL", 10, 1)
-        self.textedit.setFont(font)
-        self.textedit.setText(self.text)
+        if len(self.filepath) > 0:
+            fontdb = QFontDatabase()
+            fontdb.addApplicationFont(".\\AbyssinicaSIL-Regular.ttf")
+            font  = QFont("Abyssinica SIL", 10, 1)
+            self.textedit.setFont(font)
+            self.textedit.setText(self.text)
+        else:
+            self.disperrmessage("Idle image Error" , "Please choose an image first")
 
     @QtCore.pyqtSlot()
     def show_image(self):
