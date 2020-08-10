@@ -153,7 +153,7 @@ class Ui_MainWindow(object):
                 text = pytesseract.image_to_data(img, lang="amh")
                 imgpil = Image.fromarray(self.resultimage)
                 draw = ImageDraw.Draw(imgpil)
-                font = ImageFont.truetype(".\AbyssinicaSIL-Regular.ttf", self.fontsize)
+                font = ImageFont.truetype(".\\fonts\\AbyssinicaSIL-Regular.ttf", self.fontsize)
 
                 for x, i in enumerate(text.splitlines()):
                     if x != 0 and len(i.split()) == 12:
