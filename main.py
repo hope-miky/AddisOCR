@@ -25,7 +25,7 @@ import io
 from PIL import ImageFont, ImageDraw, Image
 
 # Setting tesseract cmd installation file path, this will be flexible based on your installation location.
-pytesseract.pytesseract.tesseract_cmd=r"Tesseract-OCR\\tesseract.exe"
+pytesseract.pytesseract.tesseract_cmd=r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
 
 class Ui_MainWindow(object):
