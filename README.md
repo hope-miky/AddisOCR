@@ -14,6 +14,8 @@ Tesseract was originally developed at Hewlett-Packard Laboratories Bristol and a
 pip install pytesseract opencv-python PyQt5 pillow
 ```
 
+### Run the UI
+
 ```bash
 cd <project-dir>
 python main.py
