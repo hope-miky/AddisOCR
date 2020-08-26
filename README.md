@@ -1,6 +1,9 @@
 # AddisOCR
 OCR UI built on the top of Tesseract engine for Amharic language
 [![Ui](<https://miro.medium.com/proxy/1*bvKyPFsQKGAPw1KcSUupsg.png>)](https://github.com/Tesfamichael1074/AddisOCR)
+
+AddisOCR is a very simple UI i made to implement Tesseract on Amharic texts with some pre-processing algorithms. You can choose any Image formats by clicking the “choose image” button and the you can click the “proceed” button with an appropriate font size. I have used AbyssinicaSIL font file because Amharic is not supported by default in Opencv. 
+
 The package contains an OCR engine — libtesseract and a command line program - tesseract. Tesseract 4 adds a new neural net (LSTM) based OCR engine which is focused on line recognition, but also still supports the legacy Tesseract OCR engine of Tesseract 3 which works by recognizing character patterns. Compatibility with Tesseract 3 is enabled by using the Legacy OCR Engine mode (--oem 0). It also needs traineddata files which support the legacy engine, for example those from the tessdata repository.
 Tesseract was originally developed at Hewlett-Packard Laboratories Bristol and at Hewlett-Packard Co, Greeley Colorado between 1985 and 1994, with some more changes made in 1996 to port to Windows, and some C++izing in 1998. In 2005 Tesseract was open sourced by HP. Since 2006 it is developed by Google.
 
