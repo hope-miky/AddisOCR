@@ -10,8 +10,13 @@ Tesseract was originally developed at Hewlett-Packard Laboratories Bristol and a
 ### Installation
 
 
-```
+```python
 pip install pytesseract opencv-python PyQt5 pillow
+```
+
+```bash
+cd <project-dir>
+python main.py
 ```
 
 One thing to note in installation is tesseract uses individual trained models for each languages, the default language is English but in our case we are going to use tesseract for Amharic so download the pre-trained model in tesseract official repo, I also have uploaded it on the project repo so copy that to <path to tesseract>/tessdata. now we proceed to testing.
